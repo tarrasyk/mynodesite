@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body class="container">
+<p class="lead">Приємного спілкування :-)</p>
+
+<form id="publish" class="form-inline">
+    <input type="text" name="message"/>
+    <input type="submit" class="btn-primary" value="Надіслати"/>
+</form>
+
+<ul id="messages"></ul>
+
+<script>
+    publish.onsubmit = function(){
+      var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/publish", true);
+        xhr.send(JSON.stringify({message: this.elements.message.value}));
+        this.message.value = '';
+        return false;
+    };
+
+    subscribe();
+
+    function subscribe(){
+        var xhr = new XMLHttpRequest();
+
+        xhr.open("GET", "/subscribe", true);
+        xhr.onload = function(){
+            var li = document.creatElement('li');
+            li.textContent = this.responseText;
+            message.appendChild(li);
+            subscribe()
+        };
+        xhr.onerror = xhr.onabort = function(){
+            setTimeout(subscribe, 500);
+        };
+        xhr.send('')
+    }
+
+</script>
+
+</body>
+</html>
